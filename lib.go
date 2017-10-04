@@ -1025,6 +1025,17 @@ func ReadZipReader(r *zip.Reader) (*File, error) {
 		readerErr.Err = "No sheets found in XLSX File"
 		return nil, readerErr
 	}
+	// TODO: implement retrieval of sheet comments
+	commentMap := make(map[string]*comment)
+	if file.Comments != nil {
+		for _, c := range file.Comments {
+			commentMap[c.Ref] = &c
+		}
+	}
+	for _, s := range sheets {
+		s.Comment = commentMap
+	}
+
 	file.Sheet = sheetsByName
 	file.Sheets = sheets
 
